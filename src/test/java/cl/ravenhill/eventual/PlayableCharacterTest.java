@@ -8,24 +8,37 @@
 
 package cl.ravenhill.eventual;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotSame;
+import net.jqwik.api.ForAll;
+import net.jqwik.api.Label;
+import net.jqwik.api.Property;
+import org.jetbrains.annotations.NotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 class PlayableCharacterTest {
-  private PlayableCharacter playableCharacter;
 
-  @BeforeEach
-  void setUp() {
-    playableCharacter = new PlayableCharacter();
+  @Property
+  @Label("Characters with different parameters should not be equal.")
+  void notEqualsTest(@ForAll @NotNull String name1, @ForAll String name2) {
+    // We enforce that the names are different to avoid the case where the names are the same, also,
+    // we check that the names are not empty because the hash code of different empty strings is
+    // always 0 (yes, there's more than one empty string in the universe).
+    if (!name1.equals(name2)) {
+      var character1 = new PlayableCharacter(name1);
+      var character2 = new PlayableCharacter(name2);
+      assertNotEquals(character1, character2);
+    }
   }
 
-  @Test
-  void constructorTest() {
-    var expected = new PlayableCharacter();
-    assertNotSame(expected, playableCharacter);
-    assertEquals(expected, playableCharacter);
-    assertEquals(expected.hashCode(), playableCharacter.hashCode(), "Hash codes should be equal.");
+  @Property
+  @Label("Characters with the same parameters should be equal.")
+  void equalsTest(@ForAll @NotNull String name) {
+    var playableCharacter = new PlayableCharacter(name);
+    var expected = new PlayableCharacter(name);
+    assertAll(
+        () -> assertNotSame(expected, playableCharacter),
+        () -> assertEquals(expected, playableCharacter),
+        () -> assertEquals(expected.hashCode(), playableCharacter.hashCode(),
+                           "Hash codes should be equal.")
+    );
   }
 }
