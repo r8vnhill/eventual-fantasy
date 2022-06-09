@@ -1,0 +1,26 @@
+/*
+ * "eventual-fantasy" (c) by R8V.
+ * "eventual-fantasy" is licensed under a
+ * Creative Commons Attribution 4.0 International License.
+ * You should have received a copy of the license along with this
+ * work. If not, see <https://creativecommons.org/licenses/by/4.0/>.
+ */
+
+package cl.ravenhill.eventual.controller.states;
+
+import cl.ravenhill.eventual.controller.Controller;
+import cl.ravenhill.eventual.exceptions.InvalidStateOperationException;
+
+public class IdleState extends State {
+  public IdleState(Controller context) {
+    super(context);
+  }
+
+  public void toSelectCharacterState() {
+    context.setState(new SelectCharacterState(context));
+  }
+
+  public void toAttackingState() throws InvalidStateOperationException {
+    context.setState(new AttackingState(context));
+  }
+}

@@ -1,5 +1,6 @@
 package cl.ravenhill.eventual;
 
+import cl.ravenhill.eventual.controller.Controller;
 import net.jqwik.api.ForAll;
 import net.jqwik.api.Label;
 import net.jqwik.api.Property;
@@ -25,7 +26,7 @@ class ControllerTest {
   @Property
   @Label("Controller can create playable characters correctly.")
   void createPlayerTest(@ForAll @NotNull String name) {
-    var expected = new PlayableCharacter(name);
+    var expected = new GameCharacter(name);
     var character = controller.createPlayableCharacter(name);
     assertEquals(expected, character);
   }

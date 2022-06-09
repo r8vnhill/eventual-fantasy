@@ -14,7 +14,7 @@ import net.jqwik.api.Property;
 import org.jetbrains.annotations.NotNull;
 import static org.junit.jupiter.api.Assertions.*;
 
-class PlayableCharacterTest {
+class CharacterTest {
 
   @Property
   @Label("Characters with different parameters should not be equal.")
@@ -23,8 +23,8 @@ class PlayableCharacterTest {
     // we check that the names are not empty because the hash code of different empty strings is
     // always 0 (yes, there's more than one empty string in the universe).
     if (!name1.equals(name2)) {
-      var character1 = new PlayableCharacter(name1);
-      var character2 = new PlayableCharacter(name2);
+      var character1 = new GameCharacter(name1);
+      var character2 = new GameCharacter(name2);
       assertNotEquals(character1, character2);
     }
   }
@@ -32,8 +32,8 @@ class PlayableCharacterTest {
   @Property
   @Label("Characters with the same parameters should be equal.")
   void equalsTest(@ForAll @NotNull String name) {
-    var playableCharacter = new PlayableCharacter(name);
-    var expected = new PlayableCharacter(name);
+    var playableCharacter = new GameCharacter(name);
+    var expected = new GameCharacter(name);
     assertAll(
         () -> assertNotSame(expected, playableCharacter),
         () -> assertEquals(expected, playableCharacter),

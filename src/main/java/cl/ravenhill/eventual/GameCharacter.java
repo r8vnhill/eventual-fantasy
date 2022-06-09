@@ -13,7 +13,7 @@ import java.util.Objects;
 /**
  * A character that can be controlled by the player.
  */
-public class PlayableCharacter {
+public class GameCharacter {
 
   private final String name;
 
@@ -22,7 +22,7 @@ public class PlayableCharacter {
    *
    * @param name the name of the character
    */
-  public PlayableCharacter(String name) {
+  public GameCharacter(String name) {
     this.name = name;
   }
 
@@ -31,7 +31,7 @@ public class PlayableCharacter {
    */
   @Override
   public boolean equals(Object obj) {
-    if (obj instanceof PlayableCharacter other) {
+    if (obj instanceof GameCharacter other) {
       return Objects.equals(name, other.name);
     }
     return false;
@@ -42,7 +42,7 @@ public class PlayableCharacter {
    */
   @Override
   public int hashCode() {
-    return Objects.hash(PlayableCharacter.class, name);
+    return Objects.hash(GameCharacter.class, name);
   }
 
   /**
@@ -51,5 +51,9 @@ public class PlayableCharacter {
   @Override
   public String toString() {
     return "PlayableCharacter{}";
+  }
+
+  public String getName() {
+    return name;
   }
 }
