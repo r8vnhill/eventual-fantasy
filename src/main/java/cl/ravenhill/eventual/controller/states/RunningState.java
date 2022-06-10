@@ -19,6 +19,6 @@ public class RunningState extends GameState {
   @Override
   public void toSelectingTargetState() throws UnsupportedStateOperationException {
     context.setState(new SelectingTargetState(context));
-    context.promptSelection();
+//    context.promptSelection(); SACAR
   }
 }

@@ -12,16 +12,25 @@ import cl.ravenhill.eventual.controller.states.GameState;
 import cl.ravenhill.eventual.controller.states.RunningState;
 import cl.ravenhill.eventual.exceptions.UnsupportedStateOperationException;
 import cl.ravenhill.eventual.model.GameCharacter;
+import cl.ravenhill.eventual.ui.InputManager;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Scanner;
 
-public class GameController {
+public class GameController implements Observer {
   private final GameCharacter player = new GameCharacter("player");
   private final List<GameCharacter> enemies =
       List.of(new GameCharacter("enemy1"), new GameCharacter("enemy2"),
               new GameCharacter("enemy3"));
   private GameState state = new RunningState(this);
   private GameCharacter selectedTarget;
+  private InputManager inputManager = new InputManager();
+
+  public GameController() {
+    inputManager.addObserver(this);
+  }
+
 
   public static void main(String[] args) throws UnsupportedStateOperationException {
     GameController controller = new GameController();
@@ -33,7 +42,8 @@ public class GameController {
   }
 
   public void battle() throws UnsupportedStateOperationException {
-    state.toSelectingTargetState();
+    state.toSelectingTargetState(); // !
+    inputManager.promptForInput();
   }
 
   public void promptSelection() throws UnsupportedStateOperationException {
@@ -43,7 +53,7 @@ public class GameController {
     }
     Scanner scanner = new Scanner(System.in);
     selectedTarget = enemies.get(scanner.nextInt());
-    state.doAction();
+    inputManager.processInput();
   }
 
   public void setState(GameState state) {
@@ -53,5 +63,24 @@ public class GameController {
   public void doAttack() throws UnsupportedStateOperationException {
     player.attack(selectedTarget);
     state.toRunningState();
+  }
+
+  @Override
+  public void update(Observable o, Object arg) {
+    try {
+      if (arg instanceof Boolean) {
+        if ((Boolean) arg) {
+          runContextAction();
+        } else {
+          promptSelection();
+        }
+      }
+    } catch (UnsupportedStateOperationException e) {
+      e.printStackTrace();
+    }
+  }
+
+  private void runContextAction() throws UnsupportedStateOperationException {
+    state.doAction();
   }
 }
