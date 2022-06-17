@@ -15,10 +15,6 @@ import java.util.Observer;
 public class InputManager extends Observable {
   PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
-  public void addObserver(Observer observer) {
-    addObserver(observer);
-  }
-
   public void promptForInput() {
     setChanged();
     notifyObservers(false);

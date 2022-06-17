@@ -25,7 +25,7 @@ public class GameController implements Observer {
               new GameCharacter("enemy3"));
   private GameState state = new RunningState(this);
   private GameCharacter selectedTarget;
-  private InputManager inputManager = new InputManager();
+  private final InputManager inputManager = new InputManager();
 
   public GameController() {
     inputManager.addObserver(this);
