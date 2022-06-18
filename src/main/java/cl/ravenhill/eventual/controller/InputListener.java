@@ -9,8 +9,10 @@
 package cl.ravenhill.eventual.controller;
 
 import cl.ravenhill.eventual.exceptions.UnsupportedStateOperationException;
+import cl.ravenhill.eventual.ui.InputManager;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import org.jetbrains.annotations.NotNull;
 
 public class InputListener implements PropertyChangeListener {
 
@@ -21,12 +23,13 @@ public class InputListener implements PropertyChangeListener {
   }
 
   @Override
-  public void propertyChange(PropertyChangeEvent evt) {
+  public void propertyChange(@NotNull PropertyChangeEvent evt) {
     try {
-      if ((Boolean) evt.getNewValue()) {
-        context.doAttack();
-      } else {
-        context.promptSelection();
+      switch ((InputManager.InputStatus) evt.getNewValue()) {
+        case WAITING_INPUT -> context.promptSelection();
+        case INPUT_RECEIVED -> context.doContextAction();
+        // This should never occur, but I include it for safety reasons
+        default -> throw new IllegalStateException("Unexpected value: " + evt.getNewValue());
       }
     } catch (UnsupportedStateOperationException ex) {
       ex.printStackTrace();

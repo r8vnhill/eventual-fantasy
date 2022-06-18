@@ -14,21 +14,20 @@ import cl.ravenhill.eventual.exceptions.UnsupportedStateOperationException;
 import cl.ravenhill.eventual.model.GameCharacter;
 import cl.ravenhill.eventual.ui.InputManager;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.Scanner;
 
-public class GameController implements Observer {
-  private final GameCharacter player = new GameCharacter("player");
+public class GameController {
+  private final GameCharacter player = createCharacter("player");
   private final List<GameCharacter> enemies =
-      List.of(new GameCharacter("enemy1"), new GameCharacter("enemy2"),
-              new GameCharacter("enemy3"));
+      List.of(createCharacter("enemy1"), createCharacter("enemy2"),
+              createCharacter("enemy3"));
   private GameState state = new RunningState(this);
   private GameCharacter selectedTarget;
   private final InputManager inputManager = new InputManager();
 
   public GameController() {
-    inputManager.addObserver(this);
+    var inputListener = new InputListener(this);
+    inputManager.addInputPromptListener(inputListener);
   }
 
 
@@ -65,22 +64,7 @@ public class GameController implements Observer {
     state.toRunningState();
   }
 
-  @Override
-  public void update(Observable o, Object arg) {
-    try {
-      if (arg instanceof Boolean) {
-        if ((Boolean) arg) {
-          runContextAction();
-        } else {
-          promptSelection();
-        }
-      }
-    } catch (UnsupportedStateOperationException e) {
-      e.printStackTrace();
-    }
-  }
-
-  private void runContextAction() throws UnsupportedStateOperationException {
+  public void doContextAction() throws UnsupportedStateOperationException {
     state.doAction();
   }
 }

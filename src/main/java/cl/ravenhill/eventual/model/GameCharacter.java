@@ -10,8 +10,9 @@ package cl.ravenhill.eventual.model;
 
 import org.jetbrains.annotations.NotNull;
 
+
 public class GameCharacter {
-  private String name;
+  private final String name;
 
   public GameCharacter(String name) {
     this.name = name;

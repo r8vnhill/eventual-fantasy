@@ -8,20 +8,26 @@
 
 package cl.ravenhill.eventual.ui;
 
+import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.Observable;
-import java.util.Observer;
 
-public class InputManager extends Observable {
-  PropertyChangeSupport pcs = new PropertyChangeSupport(this);
+public class InputManager {
+  PropertyChangeSupport inputPromptNotification = new PropertyChangeSupport(this);
+
+  public void addInputPromptListener(PropertyChangeListener listener) {
+    inputPromptNotification.addPropertyChangeListener(listener);
+  }
 
   public void promptForInput() {
-    setChanged();
-    notifyObservers(false);
+    inputPromptNotification.firePropertyChange("Input Prompt", null, InputStatus.WAITING_INPUT);
   }
 
   public void processInput() {
-    setChanged();
-    notifyObservers(true);
+    inputPromptNotification.firePropertyChange("Input Received", null, InputStatus.INPUT_RECEIVED);
+  }
+
+  public enum InputStatus {
+    WAITING_INPUT,
+    INPUT_RECEIVED
   }
 }
